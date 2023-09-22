@@ -12,6 +12,7 @@ import flatpickr from "flatpickr";
 
         if (selectedDate <= new Date()) {
           window.alert("Please choose a date in the future");
+          startButton.setAttribute('disabled', 'true');
         } else {
           const startButton = document.querySelector('[data-start]');
           startButton.removeAttribute('disabled');
@@ -45,7 +46,8 @@ import flatpickr from "flatpickr";
     }
 
     const startButton = document.querySelector('[data-start]');
-    const timer = document.querySelector('.timer');
+const timer = document.querySelector('.timer');
+    startButton.setAttribute('disabled', 'true');
 const timerStyles = `
 
   border: 1px solid #ccc;
@@ -69,6 +71,8 @@ timer.setAttribute('style', timerStyles);
           window.alert("Please choose a date in the future");
           clearInterval(timerInterval);
         } else {
+          startButton.setAttribute('disabled', 'true');
+    myInput.setAttribute('disabled', 'true');
           const timeObj = convertMs(timeDiff);
 
           document.querySelector('[data-days]').textContent = addLeadingZero(timeObj.days);
@@ -79,6 +83,8 @@ timer.setAttribute('style', timerStyles);
           if (timeDiff <= 0) {
             clearInterval(timerInterval);
             timer.textContent = "Time's up!";
+            startButton.removeAttribute('disabled');
+        myInput.removeAttribute('disabled');
           }
         }
       }, 1000);

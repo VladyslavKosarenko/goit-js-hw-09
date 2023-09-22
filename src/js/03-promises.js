@@ -20,14 +20,23 @@ function handleSubmit(event) {
   const delay = formData.get('delay');
   
 
-  for (let i = 1; i <= amount; i++) {
-    createPromise(i, delay)
+function createAndHandlePromise(position) {
+    if (position > amount) {
+      return; 
+    }
+
+    createPromise(position, delay)
       .then(({ position, delay }) => {
         console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
+        createAndHandlePromise(position + 1); 
       })
       .catch(({ position, delay }) => {
         console.log(`❌ Rejected promise ${position} in ${delay}ms`);
+        createAndHandlePromise(position + 1); 
       });
   }
+
+  
+  createAndHandlePromise(1);
 }
 
