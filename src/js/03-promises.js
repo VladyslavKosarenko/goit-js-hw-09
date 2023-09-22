@@ -1,7 +1,7 @@
 function createPromise(position, delay) {
   return new Promise((resolve, reject) => {
+    const shouldResolve = Math.random() > 0.3;
     setTimeout(() => {
-      const shouldResolve = Math.random() > 0.3;
       if (shouldResolve) {
         resolve({ position, delay });
       } else {
@@ -10,33 +10,36 @@ function createPromise(position, delay) {
     }, delay);
   });
 }
+
 const form = document.querySelector('.form');
 form.addEventListener('submit', handleSubmit);
+
 function handleSubmit(event) {
   event.preventDefault();
 
   const formData = new FormData(event.target);
   const amount = formData.get('amount');
-  const delay = formData.get('delay');
-  
+  const firstDelay = parseInt(formData.get('delay'));
+  const delayStep = parseInt(formData.get('step'));
 
-function createAndHandlePromise(position) {
+  function createAndHandlePromise(position) {
     if (position > amount) {
-      return; 
+      return;
     }
 
-    createPromise(position, delay)
+    const currentDelay = firstDelay + delayStep * (position - 1);
+
+    createPromise(position, currentDelay)
       .then(({ position, delay }) => {
         console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-        createAndHandlePromise(position + 1); 
       })
       .catch(({ position, delay }) => {
         console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-        createAndHandlePromise(position + 1); 
+      })
+      .finally(() => {
+        createAndHandlePromise(position + 1);
       });
   }
 
-  
   createAndHandlePromise(1);
 }
-
